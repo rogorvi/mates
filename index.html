@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f7cff" />
+  <title>Mates · El Método</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header id="topbar" hidden>
+    <button id="back-btn" class="icon-btn" aria-label="Volver">←</button>
+    <div id="topbar-title">Mates</div>
+    <div id="topbar-right"></div>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <template id="tpl-profiles">
+    <section class="screen">
+      <h1>¿Quién va a practicar?</h1>
+      <div class="profile-grid" id="profile-grid"></div>
+      <button class="primary" id="add-profile-btn">+ Añadir niño/a</button>
+    </section>
+  </template>
+
+  <template id="tpl-create-profile">
+    <section class="screen">
+      <h1>Nuevo perfil</h1>
+      <label class="field">
+        Nombre
+        <input type="text" id="new-name" maxlength="20" placeholder="Ej. Lucía" autocomplete="off" />
+      </label>
+      <label class="field">Color
+        <div class="color-row" id="color-row"></div>
+      </label>
+      <label class="field">Avatar
+        <div class="emoji-row" id="emoji-row"></div>
+      </label>
+      <div class="row">
+        <button class="ghost" id="cancel-create">Cancelar</button>
+        <button class="primary" id="save-profile">Empezar la prueba de nivel</button>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-home">
+    <section class="screen">
+      <div class="hero">
+        <div class="avatar-big" id="avatar-big"></div>
+        <div>
+          <div class="muted">Hola</div>
+          <h1 id="hello-name"></h1>
+          <div class="muted small" id="level-label"></div>
+        </div>
+      </div>
+
+      <div class="cards-stack">
+        <button class="big-card primary-card" id="practice-btn">
+          <div class="big-card-title">Practicar</div>
+          <div class="big-card-sub" id="practice-sub">Ejercicios para hoy</div>
+        </button>
+
+        <div class="row two">
+          <button class="big-card" id="progress-btn">
+            <div class="big-card-title">Progreso</div>
+            <div class="big-card-sub" id="progress-sub">Ver mi avance</div>
+          </button>
+          <button class="big-card" id="orient-btn">
+            <div class="big-card-title">Orientador</div>
+            <div class="big-card-sub">Vista para el adulto</div>
+          </button>
+        </div>
+      </div>
+
+      <button class="link" id="switch-profile">Cambiar de niño/a</button>
+    </section>
+  </template>
+
+  <template id="tpl-leveltest">
+    <section class="screen test">
+      <h1>Prueba de nivel</h1>
+      <p class="muted">Vamos a ver qué cosas ya sabes. Si no estás seguro/a, prueba.</p>
+      <div id="lt-progress" class="progress"><span></span></div>
+      <div id="lt-stage"></div>
+    </section>
+  </template>
+
+  <template id="tpl-session">
+    <section class="screen session">
+      <div class="progress"><span id="sess-progress"></span></div>
+      <div id="sess-stage"></div>
+      <div id="sess-feedback" class="feedback" aria-live="polite"></div>
+    </section>
+  </template>
+
+  <template id="tpl-session-summary">
+    <section class="screen">
+      <h1>¡Sesión terminada!</h1>
+      <div class="stars" id="stars-row"></div>
+      <ul class="summary-list">
+        <li><strong id="s-correct">0</strong> aciertos</li>
+        <li><strong id="s-wrong">0</strong> fallos</li>
+        <li><strong id="s-time">0</strong> segundos</li>
+      </ul>
+      <p class="muted" id="s-encourage"></p>
+      <div class="row">
+        <button class="ghost" id="s-home">Volver</button>
+        <button class="primary" id="s-again">Otra sesión</button>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-progress">
+    <section class="screen">
+      <h1>Mi progreso</h1>
+      <div class="stats-grid" id="prog-stats"></div>
+      <h2>Lo que estoy aprendiendo</h2>
+      <div id="prog-skills" class="skills-list"></div>
+    </section>
+  </template>
+
+  <template id="tpl-orient">
+    <section class="screen">
+      <h1>Panel del orientador</h1>
+      <p class="muted small">Información para el adulto. No comparamos a los niños entre sí.</p>
+      <div class="stats-grid" id="orient-stats"></div>
+
+      <h2>Conceptos dominados</h2>
+      <div id="orient-mastered" class="tag-cloud"></div>
+
+      <h2>Conceptos pendientes (próximas sesiones)</h2>
+      <div id="orient-due" class="tag-cloud"></div>
+
+      <h2>Historial de sesiones</h2>
+      <div id="orient-history"></div>
+
+      <details class="danger">
+        <summary>Opciones avanzadas</summary>
+        <button class="ghost" id="orient-export">Exportar progreso (JSON)</button>
+        <button class="ghost" id="orient-import">Importar progreso (JSON)</button>
+        <input type="file" id="orient-import-file" accept="application/json" hidden />
+        <button class="danger-btn" id="orient-reset">Reiniciar el progreso de este perfil</button>
+      </details>
+    </section>
+  </template>
+
+  <script src="storage.js"></script>
+  <script src="exercises.js"></script>
+  <script src="srs.js"></script>
+  <script src="handwrite.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>

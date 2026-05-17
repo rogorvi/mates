@@ -1,0 +1,15 @@
+{
+  "name": "Mates · El Método",
+  "short_name": "Mates",
+  "description": "Práctica de matemáticas con repaso espaciado para niños.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f8fd",
+  "theme_color": "#4f7cff",
+  "lang": "es",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
